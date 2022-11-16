@@ -3,29 +3,28 @@ package study.querydsl.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import study.querydsl.dto.MemberSearchCondition;
 import study.querydsl.dto.MemberTeamDto;
 import study.querydsl.dto.QMemberTeamDto;
 import study.querydsl.entity.Member;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 import static study.querydsl.entity.QMember.member;
 import static study.querydsl.entity.QTeam.team;
 
+@Repository
+@RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-
-    public MemberRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
 
     @Override
     //회원명, 팀명, 나이(ageGoe, ageLoe)
@@ -45,7 +44,6 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                         ageLoe(condition.getAgeLoe()))
                 .fetch();
     }
-
 
     //Spring Data JPA 와 QueryDsl 페이징 연동
     @Override
@@ -147,9 +145,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         return PageableExecutionUtils.getPage(result, pageable, () -> countQuery.fetchCount());
     }
 
-
         //=========================================================
-
 
         private BooleanExpression usernameEq (String username){
             return StringUtils.hasText(username) ? member.username.eq(username) : null;
@@ -163,4 +159,4 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
         private BooleanExpression ageLoe (Integer ageLoe){
             return ageLoe != null ? member.age.loe(ageLoe) : null;
         }
-    }
+}
