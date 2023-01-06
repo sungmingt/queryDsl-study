@@ -1,6 +1,5 @@
 package querydsl.dto_projection.repository.user;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import querydsl.dto_projection.entity.Users;
 
